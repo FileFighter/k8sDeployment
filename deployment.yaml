@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filefighter-fe-deployment
+  labels:
+    app: filefighter
+spec:
+  selector:
+    matchLabels:
+      app: filefighter-fe
+  template:
+    metadata:
+      labels:
+        app: filefighter-fe
+    spec:
+      containers:
+      - name: ff-frontend
+        image: filefighter/frontend
+        ports:
+        - containerPort: 5000
+        
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filefighter-rest-deployment
+  labels:
+    app: filefighter
+spec:
+  selector:
+    matchLabels:
+      app: filefighter-rest
+  template:
+    metadata:
+      labels:
+        app: filefighter-rest
+    spec:
+      containers:
+      - name: ff-rest
+        image: filefighter/rest
+        ports:
+        - containerPort: 8080
+
