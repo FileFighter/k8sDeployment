@@ -16,6 +16,9 @@ spec:
       containers:
       - name: ff-frontend
         image: filefighter/frontend
+        env:
+          - name: REST_PORT
+            value: 7080
         ports:
         - containerPort: 5000
         
@@ -39,6 +42,52 @@ spec:
       containers:
       - name: ff-rest
         image: filefighter/rest
+        env:
+          - name: DB_USERNAME
+            value: "root"
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ff-secret
+                key: password
+          - name: DB_NAME
+            value: "filefighter"
+          - name: DB_CONTAINER_NAME
+            value: "ff-db-service"
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
         ports:
         - containerPort: 8080
 
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filefighter-db-deployment
+  labels:
+    app: filefighter
+spec:
+  selector:
+    matchLabels:
+      app: filefighter-db
+  template:
+    metadata:
+      labels:
+        app: filefighter-db
+    spec:
+      containers:
+        - name: ff-db
+          image: mongo:latest
+          env:
+            - name: MONGO_INITDB
+              value: "filefighter"
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "root"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ff-secret
+                  key: password
+          ports:
+            - containerPort: 27017
