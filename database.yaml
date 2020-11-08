@@ -20,7 +20,10 @@ spec:
             - name: MONGO_INITDB
               value: "filefighter"
             - name: MONGO_INITDB_ROOT_USERNAME
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: ff-secret
+                  key: username
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
