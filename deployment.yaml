@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: ff-rest
-        image: filefighter/rest
+        image: filefighter/rest # https://hub.docker.com/r/filefighter/rest
         env:
           - name: DB_USERNAME
             value: "root"
@@ -54,14 +54,14 @@ spec:
           - name: DB_NAME
             value: "filefighter"
           - name: DB_CONTAINER_NAME
-            value: "ff-db-service"
+            value: "ff-db-service"  # hostname of the database
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
         livenessProbe:
           httpGet:
             path: /health
             port: 8080
-          initialDelaySeconds: 20
+          initialDelaySeconds: 10
           periodSeconds: 3
         ports:
         - containerPort: 8080
@@ -85,7 +85,7 @@ spec:
     spec:
       containers:
         - name: ff-db
-          image: mongo:latest
+          image: mongo:latest # https://hub.docker.com/_/mongo
           env:
             - name: MONGO_INITDB
               value: "filefighter"
