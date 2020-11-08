@@ -11,9 +11,10 @@ https://twitter.com/ctrlshifti/status/1322859969872449536
 
 To apply this do:  
 ```
-kubectl apply -f deployment.yaml 
-kubectl apply -f service.yaml 
+kubectl apply -f frontend.yaml
 kubectl apply -f secret.yaml 
+kubectl apply -f database.yaml 
+kubectl apply -f rest.yaml 
 ```
 
 

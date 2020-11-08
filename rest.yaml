@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filefighter-rest-deployment
+  labels:
+    app: filefighter
+spec:
+  selector:
+    matchLabels:
+      app: filefighter-rest
+  template:
+    metadata:
+      labels:
+        app: filefighter-rest
+    spec:
+      containers:
+        - name: ff-rest
+          image: filefighter/rest # https://hub.docker.com/r/filefighter/rest
+          env:
+            - name: DB_USERNAME
+              value: "root"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ff-secret
+                  key: password
+            - name: DB_NAME
+              value: "filefighter"
+            - name: DB_CONTAINER_NAME
+              value: "ff-db-service"  # hostname of the database
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ff-rest-service
+spec:
+  selector:
+    app: filefighter-rest
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
